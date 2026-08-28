@@ -1,0 +1,111 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+    createContext,
+    ReactNode,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
+
+type ThemeMode = "light" | "dark";
+
+export interface AppColors {
+  background: string;
+  surface: string;
+  text: string;
+  textMuted: string;
+  border: string;
+  primary: string;
+  statusBarStyle: "light" | "dark";
+}
+
+const lightColors: AppColors = {
+  background: "#FFF4F4",
+  surface: "#FFFFFF",
+  text: "#302C3B",
+  textMuted: "#817887",
+  border: "#EADFE3",
+  primary: "#9F91F5",
+  statusBarStyle: "dark",
+};
+
+const darkColors: AppColors = {
+  background: "#17151F",
+  surface: "#24212E",
+  text: "#F7F2F5",
+  textMuted: "#B5ACBB",
+  border: "#3A3545",
+  primary: "#BDB2FF",
+  statusBarStyle: "light",
+};
+
+interface ThemeContextValue {
+  mode: ThemeMode;
+  colors: AppColors;
+  isReady: boolean;
+  toggleTheme: () => Promise<void>;
+}
+
+const THEME_STORAGE_KEY = "@weather_app/theme_mode";
+
+const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
+
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  const [mode, setMode] = useState<ThemeMode>("light");
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    async function loadTheme() {
+      try {
+        const savedMode = await AsyncStorage.getItem(THEME_STORAGE_KEY);
+
+        if (savedMode === "light" || savedMode === "dark") {
+          setMode(savedMode);
+        }
+      } catch (error) {
+        console.warn("Unable to load theme preference:", error);
+      } finally {
+        setIsReady(true);
+      }
+    }
+
+    loadTheme();
+  }, []);
+
+  const toggleTheme = async () => {
+    const nextMode: ThemeMode = mode === "light" ? "dark" : "light";
+
+    setMode(nextMode);
+
+    try {
+      await AsyncStorage.setItem(THEME_STORAGE_KEY, nextMode);
+    } catch (error) {
+      console.warn("Unable to save theme preference:", error);
+    }
+  };
+
+  const value = useMemo(
+    () => ({
+      mode,
+      colors: mode === "dark" ? darkColors : lightColors,
+      isReady,
+      toggleTheme,
+    }),
+    [isReady, mode],
+  );
+
+  return (
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  );
+}
+
+export function useAppTheme() {
+  const context = useContext(ThemeContext);
+
+  if (!context) {
+    throw new Error("useAppTheme must be used within ThemeProvider.");
+  }
+
+  return context;
+}

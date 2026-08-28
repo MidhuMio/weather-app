@@ -1,18 +1,74 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { WeatherProvider } from '@/context/weather-context';
+import { ThemeProvider, useAppTheme } from '@/context/theme-context';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+function AppNavigator() {
+  const { colors, isReady } = useAppTheme();
 
-SplashScreen.preventAutoHideAsync();
+  if (!isReady) {
+    return null;
+  }
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
+    <>
+      <StatusBar style={colors.statusBarStyle} />
+
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.textMuted,
+          tabBarStyle: {
+            backgroundColor: colors.surface,
+            borderTopColor: colors.border,
+            height: 72,
+            paddingTop: 8,
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: '600',
+          },
+        }}>
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Weather',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="partly-sunny-outline" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="cities"
+          options={{
+            title: 'Location',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="location-outline" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: 'Settings',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="settings-outline" size={size} color={color} />
+            ),
+          }}
+        />
+      </Tabs>
+    </>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <WeatherProvider>
+        <AppNavigator />
+      </WeatherProvider>
     </ThemeProvider>
   );
 }

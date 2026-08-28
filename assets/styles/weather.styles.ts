@@ -1,0 +1,240 @@
+import type { AppColors } from "@/context/theme-context";
+import { StyleSheet } from "react-native";
+
+export const createWeatherStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    gradient: {
+      flex: 1,
+    },
+    safeArea: {
+      flex: 1,
+    },
+    content: {
+      padding: 20,
+      paddingBottom: 32,
+    },
+    loadingScreen: {
+      alignItems: "center",
+      backgroundColor: colors.background,
+      flex: 1,
+      justifyContent: "center",
+    },
+    loadingText: {
+      color: colors.textMuted,
+      marginTop: 12,
+    },
+    header: {
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    cityName: {
+      color: colors.text,
+      fontSize: 28,
+      fontWeight: "700",
+    },
+    countryName: {
+      color: colors.textMuted,
+      fontSize: 14,
+      marginTop: 2,
+    },
+    headerActions: {
+      flexDirection: "row",
+      gap: 10,
+    },
+    iconButton: {
+      alignItems: "center",
+      backgroundColor: colors.surface,
+      borderColor: colors.border,
+      borderRadius: 14,
+      borderWidth: 1,
+      height: 44,
+      justifyContent: "center",
+      width: 44,
+    },
+    offlineBanner: {
+      alignItems: "center",
+      backgroundColor: colors.surface,
+      borderColor: colors.border,
+      borderRadius: 12,
+      borderWidth: 1,
+      flexDirection: "row",
+      gap: 8,
+      marginTop: 20,
+      padding: 12,
+    },
+    offlineText: {
+      color: colors.text,
+      fontSize: 13,
+    },
+    errorText: {
+      color: "#C44747",
+      fontSize: 14,
+      marginTop: 16,
+      textAlign: "center",
+    },
+    heroCard: {
+      alignItems: "center",
+      backgroundColor: colors.surface,
+      borderColor: colors.border,
+      borderRadius: 24,
+      borderWidth: 1,
+      marginTop: 24,
+      padding: 28,
+    },
+    temperature: {
+      color: colors.text,
+      fontSize: 56,
+      fontWeight: "700",
+      marginTop: 8,
+    },
+    condition: {
+      color: colors.text,
+      fontSize: 18,
+      fontWeight: "600",
+      marginTop: 4,
+      textTransform: "capitalize",
+    },
+    feelsLike: {
+      color: colors.textMuted,
+      fontSize: 14,
+      marginTop: 8,
+    },
+    sectionTitle: {
+      color: colors.text,
+      fontSize: 20,
+      fontWeight: "700",
+      marginTop: 28,
+    },
+    metricsGrid: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: 12,
+      justifyContent: "space-between",
+      marginTop: 14,
+    },
+    metricCard: {
+      backgroundColor: colors.surface,
+      borderColor: colors.border,
+      borderRadius: 16,
+      borderWidth: 1,
+      padding: 14,
+      width: "48%",
+    },
+    metricLabel: {
+      color: colors.textMuted,
+      fontSize: 13,
+      marginTop: 10,
+    },
+    metricValue: {
+      color: colors.text,
+      fontSize: 15,
+      fontWeight: "700",
+      marginTop: 3,
+    },
+    forecastList: {
+      gap: 12,
+      paddingTop: 14,
+    },
+    forecastCard: {
+      alignItems: "center",
+      backgroundColor: colors.surface,
+      borderColor: colors.border,
+      borderRadius: 16,
+      borderWidth: 1,
+      padding: 14,
+      width: 94,
+    },
+    forecastTime: {
+      color: colors.textMuted,
+      fontSize: 13,
+      marginBottom: 12,
+    },
+    forecastTemperature: {
+      color: colors.text,
+      fontSize: 16,
+      fontWeight: "700",
+      marginTop: 10,
+    },
+    precipitation: {
+      color: colors.textMuted,
+      fontSize: 11,
+      marginTop: 6,
+    },
+    dailyList: {
+      gap: 10,
+      marginTop: 14,
+    },
+    dailyCard: {
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderColor: colors.border,
+      borderRadius: 16,
+      borderWidth: 1,
+      flexDirection: 'row',
+      padding: 14,
+    },
+    dailyDay: {
+      color: colors.text,
+      flex: 1,
+      fontSize: 15,
+      fontWeight: '700',
+    },
+    dailyCondition: {
+      color: colors.textMuted,
+      flex: 1,
+      fontSize: 14,
+      marginLeft: 12,
+      textTransform: 'capitalize',
+    },
+    dailyTemperatures: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    dailyLow: {
+      color: colors.textMuted,
+      fontSize: 14,
+    },
+    dailyHigh: {
+      color: colors.text,
+      fontSize: 14,
+      fontWeight: '700',
+    },
+    emptyState: {
+      alignItems: "center",
+      flex: 1,
+      justifyContent: "center",
+      padding: 28,
+    },
+    emptyTitle: {
+      color: colors.text,
+      fontSize: 24,
+      fontWeight: "700",
+      marginTop: 20,
+      textAlign: "center",
+    },
+    emptyText: {
+      color: colors.textMuted,
+      fontSize: 16,
+      lineHeight: 22,
+      marginTop: 10,
+      textAlign: "center",
+    },
+    primaryButton: {
+      alignItems: "center",
+      backgroundColor: colors.primary,
+      borderRadius: 14,
+      flexDirection: "row",
+      gap: 8,
+      marginTop: 24,
+      paddingHorizontal: 18,
+      paddingVertical: 14,
+    },
+    primaryButtonText: {
+      color: "#FFFFFF",
+      fontSize: 16,
+      fontWeight: "700",
+    },
+  });
+
+export type WeatherStyles = ReturnType<typeof createWeatherStyles>;
