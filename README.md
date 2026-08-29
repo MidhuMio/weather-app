@@ -89,6 +89,10 @@ The app supports device location, city search, saved locations, a favourite city
 
 ![Offline weather screen](./docs/screenshots/offline-example.jpg)
 
+### Clean Lint Check
+
+![Lint run for errors](./docs/screenshots/lint-run.png)
+
 ## Technologies Used
 
 - **React Native** — mobile user interface development
