@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "weather-app",
+    "name": "Weather",
     "slug": "weather-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -25,6 +25,12 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow Weather App to use your location to show local weather."
+        }
+      ],
       [
         "expo-splash-screen",
         {

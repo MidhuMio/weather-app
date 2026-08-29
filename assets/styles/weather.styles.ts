@@ -41,16 +41,24 @@ export const createWeatherStyles = (colors: AppColors) =>
     headerActions: {
       flexDirection: "row",
       gap: 10,
+      marginTop: 18,
     },
-    iconButton: {
-      alignItems: "center",
+    headerActionButton: {
+      alignItems: 'center',
       backgroundColor: colors.surface,
       borderColor: colors.border,
       borderRadius: 14,
       borderWidth: 1,
-      height: 44,
-      justifyContent: "center",
-      width: 44,
+      flex: 1,
+      flexDirection: 'row',
+      gap: 8,
+      justifyContent: 'center',
+      paddingVertical: 12,
+    },
+    headerActionText: {
+      color: colors.text,
+      fontSize: 14,
+      fontWeight: '700',
     },
     offlineBanner: {
       alignItems: "center",
@@ -75,12 +83,74 @@ export const createWeatherStyles = (colors: AppColors) =>
     },
     heroCard: {
       alignItems: "center",
-      backgroundColor: colors.surface,
       borderColor: colors.border,
       borderRadius: 24,
       borderWidth: 1,
       marginTop: 24,
       padding: 28,
+    },
+    favouriteCard: {
+      borderColor: colors.border,
+      borderRadius: 20,
+      borderWidth: 1,
+      marginTop: 16,
+      padding: 18,
+    },
+    favouriteHeader: {
+      alignItems: "flex-start",
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    favouriteLabel: {
+      alignItems: "center",
+      flexDirection: "row",
+      gap: 6,
+    },
+    favouriteLabelText: {
+      color: colors.textMuted,
+      fontSize: 12,
+      fontWeight: "700",
+      textTransform: "uppercase",
+    },
+    favouriteCityName: {
+      color: colors.text,
+      fontSize: 19,
+      fontWeight: "700",
+      marginTop: 8,
+    },
+    favouriteCountry: {
+      color: colors.textMuted,
+      fontSize: 13,
+      marginTop: 2,
+    },
+    favouriteRefreshButton: {
+      padding: 4,
+    },
+    favouriteWeather: {
+      alignItems: "center",
+      flexDirection: "row",
+      gap: 14,
+      marginTop: 16,
+    },
+    favouriteTemperature: {
+      color: colors.text,
+      fontSize: 28,
+      fontWeight: "700",
+    },
+    favouriteCondition: {
+      color: colors.textMuted,
+      fontSize: 14,
+      marginTop: 2,
+      textTransform: "capitalize",
+    },
+    favouriteCachedText: {
+      color: colors.textMuted,
+      fontSize: 12,
+      marginTop: 14,
+    },
+    favouriteError: {
+      color: "#C44747",
+      fontSize: 14,
     },
     temperature: {
       color: colors.text,
@@ -114,7 +184,6 @@ export const createWeatherStyles = (colors: AppColors) =>
       marginTop: 14,
     },
     metricCard: {
-      backgroundColor: colors.surface,
       borderColor: colors.border,
       borderRadius: 16,
       borderWidth: 1,
@@ -138,7 +207,6 @@ export const createWeatherStyles = (colors: AppColors) =>
     },
     forecastCard: {
       alignItems: "center",
-      backgroundColor: colors.surface,
       borderColor: colors.border,
       borderRadius: 16,
       borderWidth: 1,
@@ -167,7 +235,6 @@ export const createWeatherStyles = (colors: AppColors) =>
     },
     dailyCard: {
       alignItems: 'center',
-      backgroundColor: colors.surface,
       borderColor: colors.border,
       borderRadius: 16,
       borderWidth: 1,

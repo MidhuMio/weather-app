@@ -1,56 +1,125 @@
-# Welcome to your Expo app 👋
+# Welcome to my Weather app👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A mobile weather application built with React Native and Expo. It displays current weather conditions, upcoming forecasts, and a five-day forecast using the OpenWeather API.
 
-## Get started
+The app supports device location, city search, saved locations, a favourite city, light and dark themes, temperature and wind-speed preferences, and offline access to recently saved weather data.
 
-1. Install dependencies
+## Installation and Run Instructions
+
+### Prerequisites
+
+- Node.js and npm
+- Expo Go
+- An OpenWeather API key
+
+### Setup
+
+1. Clone or download this repository.
+
+2. Install dependencies:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+3. Create a `.env` file in the project root:
+
+   ```env
+   EXPO_PUBLIC_OPENWEATHER_API_KEY=your_openweather_api_key
+   ```
+
+4. Start the Expo development server:
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+5. Scan the QR code using Expo Go.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Features
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Current weather**  
+  Displays the current temperature, weather condition, feels-like temperature, humidity, wind speed, visibility, and pressure.
 
-## Get a fresh project
+- **Upcoming forecast**  
+  Shows the next eight three-hour forecast entries supplied by OpenWeather.
 
-When you're ready, run:
+- **Five-day forecast**  
+  Groups forecast data by day and displays the expected weather condition with minimum and maximum temperatures.
 
-```bash
-npm run reset-project
-```
+- **Current location**  
+  Requests foreground location permission and loads weather for the device’s current coordinates.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- **City search**  
+  Provides live city suggestions while typing, using OpenWeather’s geocoding API.
 
-### Other setup steps
+- **Saved locations**  
+  Cities can be saved for quick access and removed when no longer needed.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+- **Favourite city**  
+  One saved city can be marked as a favourite and is displayed as a secondary weather card on the Home screen.
 
-## Learn more
+- **Offline functionality**  
+  The most recently loaded weather and favourite weather are saved with AsyncStorage. When offline, the app displays cached data when available.
 
-To learn more about developing your project with Expo, look at the following resources:
+- **Theme preferences**  
+  Users can switch between light and dark mode. The selected theme is saved locally.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- **Unit preferences**  
+  Temperature can be changed between Celsius and Fahrenheit. Wind speed can be shown in km/h or mph. Both preferences persist after the app is closed.
 
-## Join the community
+- **Error handling**  
+  The app handles missing API keys, invalid API keys, denied location permission, unavailable locations, network problems, empty search results, and unavailable cached data.
 
-Join our community of developers creating universal apps.
+## Screenshots
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Home screen
+
+![Home screen](./docs/screenshots/home-page.jpg)
+
+### Location and navigation screen
+
+![Location screen](./docs/screenshots/location-page.jpg)
+
+### Settings screen
+
+![Settings screen](./docs/screenshots/settings-page.jpg)
+
+### Offline cached weather
+
+![Offline weather screen](./docs/screenshots/offline-example.jpg)
+
+## Technologies Used
+
+- **React Native** — mobile user interface development
+- **Expo** — React Native development and testing with Expo Go
+- **Expo Router** — tab-based navigation between Weather, Location, and Settings
+- **TypeScript** — typed application code
+- **OpenWeather API** — current weather, forecast, and city geocoding data
+- **AsyncStorage** — local persistence for preferences, saved cities, favourite city, and cached weather
+- **Expo Location** — device location permission and coordinates
+- **Expo Network** — network availability checks for offline support
+- **Expo Linear Gradient** — gradient backgrounds and weather cards
+- **Ionicons** — weather, navigation, and action icons
+
+## Testing
+
+The application was manually tested in Expo Go on Android.
+
+- Weather data loaded successfully for device location and searched cities.
+- Saved cities and favourite city persisted after restarting the app.
+- Theme, temperature, and wind-speed preferences persisted after restarting the app.
+- Offline mode was tested by disabling network access; cached weather was shown when available.
+- Location permission denial, empty search results, and API/network errors were handled with user-facing messages.
+- Code quality was checked with:
+
+  ```bash
+  npm run lint
+  ```
+
+## Known Issues and Future Improvements
+
+- The free OpenWeather forecast updates in three-hour blocks, so it is not a fully hourly forecast.
+- When offline, the app can show saved weather for the last city viewed and the favourite city, but not every saved location.
+- Weather updates when the user refreshes the page or chooses a city. It does not refresh automatically in the background.
+- In the future, the app could add weather alerts, sunrise and sunset details, saved weather for more cities, and weather-based backgrounds.

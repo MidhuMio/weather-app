@@ -4,9 +4,11 @@ import type { AppColors } from '@/context/theme-context';
 
 export const createSettingsStyles = (colors: AppColors) =>
   StyleSheet.create({
+    gradient: {
+      flex: 1,
+    },
     safeArea: {
       flex: 1,
-      backgroundColor: colors.background,
     },
     container: {
       flex: 1,
@@ -23,7 +25,11 @@ export const createSettingsStyles = (colors: AppColors) =>
       marginTop: 8,
     },
     themeSection: {
-      marginTop: 28,
+      borderColor: colors.border,
+      borderRadius: 20,
+      borderWidth: 1,
+      marginTop: 24,
+      padding: 18,
     },
     sectionLabel: {
       color: colors.text,
@@ -37,7 +43,7 @@ export const createSettingsStyles = (colors: AppColors) =>
     },
     themeOption: {
       alignItems: 'center',
-      backgroundColor: colors.surface,
+      backgroundColor: colors.background,
       borderColor: colors.border,
       borderRadius: 14,
       borderWidth: 1,

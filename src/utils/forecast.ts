@@ -1,4 +1,5 @@
 import type { ForecastEntry, WeatherCondition } from '@/types/weather';
+import { WEATHER_CONFIG } from '@/constants/weather';
 
 export interface DailyForecast {
   dateTime: number;
@@ -19,7 +20,7 @@ export function getDailyForecast(entries: ForecastEntry[]): DailyForecast[] {
   });
 
   return Array.from(groupedEntries.values())
-    .slice(0, 5)
+    .slice(0, WEATHER_CONFIG.DAILY_FORECAST_DAYS)
     .map((dayEntries) => {
       const middayEntry = dayEntries.reduce((closest, entry) => {
         const entryHour = new Date(entry.dateTime * 1000).getHours();

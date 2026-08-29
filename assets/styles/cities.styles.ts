@@ -6,7 +6,9 @@ export const createCitiesStyles = (colors: AppColors) =>
   StyleSheet.create({
     safeArea: {
       flex: 1,
-      backgroundColor: colors.background,
+    },
+    gradient: {
+      flex: 1,
     },
     content: {
       padding: 20,
@@ -64,7 +66,6 @@ export const createCitiesStyles = (colors: AppColors) =>
     },
     cityCard: {
       alignItems: 'center',
-      backgroundColor: colors.surface,
       borderColor: colors.border,
       borderRadius: 16,
       borderWidth: 1,
@@ -90,6 +91,16 @@ export const createCitiesStyles = (colors: AppColors) =>
       height: 40,
       justifyContent: 'center',
       width: 40,
+    },
+    actionGroup: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    favouriteButton: {
+      backgroundColor: colors.background,
+    },
+    activeFavouriteButton: {
+      backgroundColor: colors.primary,
     },
     addButton: {
       backgroundColor: colors.primary,

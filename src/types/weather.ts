@@ -1,4 +1,5 @@
 export type TemperatureUnit = 'metric' | 'imperial';
+export type WindUnit = 'kph' | 'mph';
 
 export interface City {
   id: string;

@@ -6,7 +6,7 @@ import {
   WeatherCondition,
 } from '@/types/weather';
 
-const API_BASE_URL = 'https://api.openweathermap.org';
+import { WEATHER_CONFIG } from '@/constants/weather';
 
 interface OpenWeatherCondition {
   main: string;
@@ -40,7 +40,7 @@ interface OpenWeatherCurrentResponse {
 }
 
 interface OpenWeatherForecastResponse {
-  list: Array<{
+  list: {
     dt: number;
     main: {
       temp: number;
@@ -49,7 +49,7 @@ interface OpenWeatherForecastResponse {
     };
     weather: OpenWeatherCondition[];
     pop: number;
-  }>;
+  }[];
 }
 
 interface OpenWeatherGeocodingResult {
@@ -132,7 +132,7 @@ function buildWeatherUrl(
   const apiKey = getApiKey();
 
   return (
-    `${API_BASE_URL}/data/2.5/${endpoint}` +
+    `${WEATHER_CONFIG.API_BASE_URL}/data/2.5/${endpoint}` +
     `?lat=${latitude}&lon=${longitude}&units=${units}&appid=${apiKey}`
   );
 }
@@ -147,8 +147,8 @@ export async function searchCities(query: string): Promise<City[]> {
 
   const apiKey = getApiKey();
   const url =
-    `${API_BASE_URL}/geo/1.0/direct` +
-    `?q=${encodeURIComponent(trimmedQuery)}&limit=5&appid=${apiKey}`;
+    `${WEATHER_CONFIG.API_BASE_URL}/geo/1.0/direct` +
+    `?q=${encodeURIComponent(trimmedQuery)}&limit=${WEATHER_CONFIG.GEOCODING_LIMIT}&appid=${apiKey}`;
 
   const results = await request<OpenWeatherGeocodingResult[]>(url);
 

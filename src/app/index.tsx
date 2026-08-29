@@ -1,7 +1,4 @@
-import {
-  createWeatherStyles,
-  type WeatherStyles,
-} from "@/assets/styles/weather.styles";
+import { createWeatherStyles, type WeatherStyles } from "@/assets/styles/weather.styles";
 import { WeatherIcon } from "@/components/weather-icon";
 import { AppColors, useAppTheme } from "@/context/theme-context";
 import { useWeather } from "@/context/weather-context";
@@ -10,31 +7,35 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { WEATHER_CONFIG } from '@/constants/weather';
+import { formatWindSpeed } from '@/utils/weather';
 
 export default function WeatherScreen() {
   const { colors } = useAppTheme();
   const {
     weatherData,
     selectedCity,
+    favouriteCity,
+    favouriteWeather,
     units,
+    windUnit,
     isReady,
     isLoading,
+    isFavouriteLoading,
     isUsingCachedData,
+    isFavouriteUsingCachedData,
     error,
+    favouriteError,
     loadWeatherForCity,
     refreshWeather,
+    refreshFavouriteWeather,
   } = useWeather();
 
   const [locationError, setLocationError] = useState<string | null>(null);
   const hasRequestedLocation = useRef(false);
+  const hasRequestedFavourite = useRef(false);
   const styles = createWeatherStyles(colors);
 
   const loadDeviceLocation = useCallback(async () => {
@@ -77,6 +78,15 @@ export default function WeatherScreen() {
     loadDeviceLocation();
   }, [isReady, loadDeviceLocation, weatherData]);
 
+  useEffect(() => {
+    if (!isReady || !favouriteCity || hasRequestedFavourite.current) {
+      return;
+    }
+
+    hasRequestedFavourite.current = true;
+    refreshFavouriteWeather();
+  }, [favouriteCity, isReady, refreshFavouriteWeather]);
+
   const handleRefresh = async () => {
     if (selectedCity) {
       await refreshWeather();
@@ -86,7 +96,6 @@ export default function WeatherScreen() {
   };
 
   const temperatureUnit = units === "metric" ? "°C" : "°F";
-  const windUnit = units === "metric" ? "m/s" : "mph";
   const visibleError = locationError ?? error;
 
   if (!isReady || (isLoading && !weatherData)) {
@@ -123,7 +132,7 @@ export default function WeatherScreen() {
 
   return (
     <LinearGradient
-      colors={[colors.background, colors.surface]}
+      colors={colors.gradients.background}
       style={styles.gradient}
     >
       <SafeAreaView style={styles.safeArea}>
@@ -132,28 +141,24 @@ export default function WeatherScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-            <View>
-              <Text style={styles.cityName}>{weatherData.city.name}</Text>
-              <Text style={styles.countryName}>{weatherData.city.country}</Text>
-            </View>
+            <Text style={styles.cityName}>{weatherData.city.name}</Text>
+            <Text style={styles.countryName}>{weatherData.city.country}</Text>
+          </View>
 
-            <View style={styles.headerActions}>
-              <Pressable style={styles.iconButton} onPress={loadDeviceLocation}>
-                <Ionicons
-                  name="location-outline"
-                  size={22}
-                  color={colors.text}
-                />
-              </Pressable>
+          <View style={styles.headerActions}>
+            <Pressable
+              style={styles.headerActionButton}
+              onPress={loadDeviceLocation}>
+              <Ionicons name="location-outline" size={20} color={colors.text} />
+              <Text style={styles.headerActionText}>My location</Text>
+            </Pressable>
 
-              <Pressable style={styles.iconButton} onPress={handleRefresh}>
-                <Ionicons
-                  name="refresh-outline"
-                  size={22}
-                  color={colors.text}
-                />
-              </Pressable>
-            </View>
+            <Pressable
+              style={styles.headerActionButton}
+              onPress={handleRefresh}>
+              <Ionicons name="refresh-outline" size={20} color={colors.text} />
+              <Text style={styles.headerActionText}>Refresh</Text>
+            </Pressable>
           </View>
 
           {isUsingCachedData && (
@@ -172,7 +177,9 @@ export default function WeatherScreen() {
 
           {visibleError && <Text style={styles.errorText}>{visibleError}</Text>}
 
-          <View style={styles.heroCard}>
+          <LinearGradient
+            colors={colors.gradients.surface}
+            style={styles.heroCard}>
             <WeatherIcon
               condition={weatherData.current.condition.main}
               color={colors.primary}
@@ -189,7 +196,78 @@ export default function WeatherScreen() {
               Feels like {weatherData.current.feelsLike}
               {temperatureUnit}
             </Text>
-          </View>
+          </LinearGradient>
+
+          {favouriteCity && (
+
+            <LinearGradient
+              colors={colors.gradients.surface}
+              style={styles.favouriteCard}>
+              {isFavouriteLoading && !favouriteWeather ? (
+                <ActivityIndicator size="small" color={colors.primary} />
+              ) : favouriteWeather ? (
+                <>
+                  <View style={styles.favouriteHeader}>
+                    <View>
+                      <View style={styles.favouriteLabel}>
+                        <Ionicons
+                          name="star"
+                          size={14}
+                          color={colors.primary}
+                        />
+                        <Text style={styles.favouriteLabelText}>Favourite</Text>
+                      </View>
+
+                      <Text style={styles.favouriteCityName}>
+                        {favouriteWeather.city.name}
+                      </Text>
+                      <Text style={styles.favouriteCountry}>
+                        {favouriteWeather.city.country}
+                      </Text>
+                    </View>
+
+                    <Pressable
+                      style={styles.favouriteRefreshButton}
+                      onPress={refreshFavouriteWeather}>
+                      <Ionicons
+                        name="refresh-outline"
+                        size={20}
+                        color={colors.text}
+                      />
+                    </Pressable>
+                  </View>
+
+                  <View style={styles.favouriteWeather}>
+                    <WeatherIcon
+                      condition={favouriteWeather.current.condition.main}
+                      color={colors.primary}
+                      size={42}
+                    />
+
+                    <View>
+                      <Text style={styles.favouriteTemperature}>
+                        {favouriteWeather.current.temperature}
+                        {temperatureUnit}
+                      </Text>
+                      <Text style={styles.favouriteCondition}>
+                        {favouriteWeather.current.condition.description}
+                      </Text>
+                    </View>
+                  </View>
+
+                  {isFavouriteUsingCachedData && (
+                    <Text style={styles.favouriteCachedText}>
+                      Showing saved weather
+                    </Text>
+                  )}
+                </>
+              ) : (
+                <Text style={styles.favouriteError}>
+                  {favouriteError ?? "Favourite weather is unavailable."}
+                </Text>
+              )}
+            </LinearGradient>
+          )}
 
           <Text style={styles.sectionTitle}>Current conditions</Text>
 
@@ -204,7 +282,11 @@ export default function WeatherScreen() {
             <Metric
               icon="leaf-outline"
               label="Wind"
-              value={`${weatherData.current.windSpeed} ${windUnit}`}
+              value={formatWindSpeed(
+                weatherData.current.windSpeed,
+                units,
+                windUnit
+              )}
               colors={colors}
               styles={styles}
             />
@@ -229,18 +311,21 @@ export default function WeatherScreen() {
           </View>
 
           <Text style={styles.sectionTitle}>Upcoming forecast</Text>
-          
+
 
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.forecastList}
           >
-            {weatherData.forecast.slice(0, 8).map((forecast) => (
-              <View key={forecast.dateTime} style={styles.forecastCard}>
+            {weatherData.forecast.slice(0, WEATHER_CONFIG.UPCOMING_FORECAST_ITEMS).map((forecast) => (
+              <LinearGradient
+                key={forecast.dateTime}
+                colors={colors.gradients.surface}
+                style={styles.forecastCard}>
                 <Text style={styles.forecastTime}>
                   {new Date(forecast.dateTime * 1000).toLocaleTimeString([], {
-                    hour: "numeric",
+                    hour: "2-digit", minute: "2-digit"
                   })}
                 </Text>
                 <WeatherIcon
@@ -255,40 +340,43 @@ export default function WeatherScreen() {
                 <Text style={styles.precipitation}>
                   {forecast.precipitationChance}% Rain
                 </Text>
-              </View>
+              </LinearGradient>
             ))}
           </ScrollView>
-            <Text style={styles.sectionTitle}>5-day forecast</Text>
-            <View style={styles.dailyList}>
-              {dailyForecast.map((day) => (
-                <View key={day.dateTime} style={styles.dailyCard}>
-                  <Text style={styles.dailyDay}>
-                    {new Date(day.dateTime * 1000).toLocaleDateString([], {
-                      weekday: 'short',
-                    })}
+          <Text style={styles.sectionTitle}>5-day forecast</Text>
+          <View style={styles.dailyList}>
+            {dailyForecast.map((day) => (
+              <LinearGradient
+                key={day.dateTime}
+                colors={colors.gradients.surface}
+                style={styles.dailyCard}>
+                <Text style={styles.dailyDay}>
+                  {new Date(day.dateTime * 1000).toLocaleDateString([], {
+                    weekday: 'short',
+                  })}
+                </Text>
+
+                <WeatherIcon
+                  condition={day.condition.main}
+                  color={colors.primary}
+                  size={26}
+                />
+
+                <Text style={styles.dailyCondition}>{day.condition.main}</Text>
+
+                <View style={styles.dailyTemperatures}>
+                  <Text style={styles.dailyLow}>
+                    {day.minimumTemperature}
+                    {temperatureUnit}  -{/* Dash to show min & max of temp */}
                   </Text>
-
-                  <WeatherIcon
-                    condition={day.condition.main}
-                    color={colors.primary}
-                    size={26}
-                  />
-
-                  <Text style={styles.dailyCondition}>{day.condition.main}</Text>
-
-                  <View style={styles.dailyTemperatures}>
-                    <Text style={styles.dailyLow}>
-                      {day.minimumTemperature}
-                      {temperatureUnit}  -{/* Dash to show min & max of temp */}
-                    </Text>
-                    <Text style={styles.dailyHigh}>
-                      {day.maximumTemperature}
-                      {temperatureUnit}
-                    </Text>
-                  </View>
+                  <Text style={styles.dailyHigh}>
+                    {day.maximumTemperature}
+                    {temperatureUnit}
+                  </Text>
                 </View>
-              ))}
-            </View>
+              </LinearGradient>
+            ))}
+          </View>
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
@@ -309,10 +397,12 @@ function Metric({
   styles: WeatherStyles;
 }) {
   return (
-    <View style={styles.metricCard}>
+    <LinearGradient
+      colors={colors.gradients.surface}
+      style={styles.metricCard}>
       <Ionicons name={icon} size={20} color={colors.primary} />
       <Text style={styles.metricLabel}>{label}</Text>
       <Text style={styles.metricValue}>{value}</Text>
-    </View>
+    </LinearGradient>
   );
 }
